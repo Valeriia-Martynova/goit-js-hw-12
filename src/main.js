@@ -4,9 +4,11 @@ import { renderGallery, clearGallery, showLoader, hideLoader, toggleLoadMoreButt
 const form = document.querySelector('.search-form');
 const input = document.querySelector('input[name="searchQuery"]');
 const loadMoreBtn = document.querySelector('.load-more');
+const gallery = document.querySelector('.gallery')
+
 let query = '';
 let page = 1;
-const perPage = 30;
+const perPage = 15;
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -21,9 +23,11 @@ form.addEventListener('submit', async (event) => {
   clearGallery();
   toggleLoadMoreButton(false);
   showLoader();
+  input.value = '';
 
   try {
     const data = await fetchImages(query, page, perPage);
+
     if (data.hits.length === 0) {
       showMessage('Sorry, no images found. Try a different query.');
     } else {
@@ -45,6 +49,15 @@ loadMoreBtn.addEventListener('click', async () => {
   try {
     const data = await fetchImages(query, page, perPage);
     renderGallery(data.hits);
+
+    const cardHeight = gallery.firstElementChild?.getBoundingClientRect().height || 0;
+    if (cardHeight) {
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
+    }
+
     if (data.hits.length < perPage || data.totalHits <= page * perPage) {
       toggleLoadMoreButton(false);
       showMessage("We're sorry, but you've reached the end of search results.");
@@ -55,5 +68,7 @@ loadMoreBtn.addEventListener('click', async () => {
     showMessage('Please try again.');
   } finally {
     hideLoader();
+
+    form.reset();
   }
 });

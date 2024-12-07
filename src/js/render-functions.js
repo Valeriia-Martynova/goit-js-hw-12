@@ -19,7 +19,17 @@ export function renderGallery(images) {
     </a>
   `).join('');
   
-  galleryEl.insertAdjacentHTML('beforeend', markup);
+    galleryEl.insertAdjacentHTML('beforeend', markup);
+    
+    const imagesLoaded = Array.from(galleryEl.querySelectorAll('img')).map(img => {
+    return new Promise(resolve => {
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
+  });
+  
+  Promise.all(imagesLoaded).then(() => {
+    galleryEl.classList.add('visible');
     
     if (!lightbox) {
       lightbox = new SimpleLightbox('.gallery a', {
@@ -28,7 +38,8 @@ export function renderGallery(images) {
       });
     } else {
       lightbox.refresh();
-    }  
+    }
+  });    
 }
 
 export function clearGallery() {

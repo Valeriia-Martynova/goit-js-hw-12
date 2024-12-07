@@ -32,7 +32,7 @@ input {
   margin-right: 8px;
 }
 
-button {
+.search {
   border-radius: 8px;
   padding: 8px 16px;
   width: 91px;
@@ -46,8 +46,8 @@ button {
   border: none;
 }
 
-button:hover,
-button:focus {
+.search:hover,
+.search:focus {
   background-color: #6c8cff;
 }
 
@@ -133,7 +133,7 @@ input:focus {
   margin: auto;
   visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
 .gallery.visible {
@@ -143,13 +143,22 @@ input:focus {
 
 .gallery__item {
   border: 1px solid #808080;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.gallery__item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .info {
   display: flex;
+  justify-content: space-between;
   text-align: center;
-  padding-top: 4px;
-  height: 48px;
+  padding: 8px 16px;
+  height: auto;
+  gap: 25px;
 }
 
 @media screen and (min-width: 768px) {
@@ -168,27 +177,9 @@ input:focus {
 }
 
 @media screen and (min-width: 1128px) {
-  .gallery {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-
-  .gallery.visible {
-    visibility: visible;
-    opacity: 1;
-  }
-
   .gallery__item {
     width: calc((100% - 72px) / 3);
   }
-}
-
-.info {
-  display: flex;
-  text-align: center;
-  padding-top: 4px;
-  height: 48px;
 }
 
 /*iziToast*/
@@ -202,4 +193,35 @@ input:focus {
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: 0.03em;
+}
+
+/* load-more */
+.load-more {
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 125px;
+  height: 40px;
+  background-color: #4e75ff;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border: none;
+  margin: auto;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.load-more.hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.load-more:hover,
+.load-more:focus {
+  background-color: #6c8cff;
 }
