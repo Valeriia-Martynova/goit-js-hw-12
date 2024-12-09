@@ -1,6 +1,10 @@
 import { fetchImages } from './js/pixabay-api.js';
 import { renderGallery, clearGallery, showLoader, hideLoader, toggleLoadMoreButton, showMessage } from './js/render-functions.js';
 
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+
+
 const form = document.querySelector('.search-form');
 const input = document.querySelector('input[name="searchQuery"]');
 const loadMoreBtn = document.querySelector('.load-more');
@@ -9,6 +13,14 @@ const gallery = document.querySelector('.gallery')
 let query = '';
 let page = 1;
 const perPage = 15;
+let lightbox;
+
+document.addEventListener('DOMContentLoaded', () => {
+  lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+});
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -27,12 +39,13 @@ form.addEventListener('submit', async (event) => {
 
   try {
     const data = await fetchImages(query, page, perPage);
-
+    
     if (data.hits.length === 0) {
       showMessage('Sorry, no images found. Try a different query.');
     } else {
       renderGallery(data.hits);
       toggleLoadMoreButton(data.hits.length === perPage);
+      lightbox.refresh();
     }
   } catch (error) {
     showMessage('Please try again.');
@@ -48,14 +61,14 @@ loadMoreBtn.addEventListener('click', async () => {
 
   try {
     const data = await fetchImages(query, page, perPage);
-    renderGallery(data.hits);
-
+    renderGallery(data.hits);     
+    
     const cardHeight = gallery.firstElementChild?.getBoundingClientRect().height || 0;
     if (cardHeight) {
       window.scrollBy({
         top: cardHeight * 2,
         behavior: 'smooth',
-      });
+      });      
     }
 
     if (data.hits.length < perPage || data.totalHits <= page * perPage) {
@@ -64,6 +77,9 @@ loadMoreBtn.addEventListener('click', async () => {
     } else {
       toggleLoadMoreButton(true);
     }
+
+    lightbox.refresh();
+
   } catch (error) {
     showMessage('Please try again.');
   } finally {

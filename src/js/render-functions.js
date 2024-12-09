@@ -1,9 +1,5 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-
 import iconError from '../img/octagon.svg';
 
-let lightbox;
 
 export function renderGallery(images) {
   const galleryEl = document.querySelector('.gallery');
@@ -29,17 +25,8 @@ export function renderGallery(images) {
   });
   
   Promise.all(imagesLoaded).then(() => {
-    galleryEl.classList.add('visible');
-    
-    if (!lightbox) {
-      lightbox = new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 250,
-      });
-    } else {
-      lightbox.refresh();
-    }
-  });    
+    galleryEl.classList.add('visible');    
+});    
 }
 
 export function clearGallery() {
